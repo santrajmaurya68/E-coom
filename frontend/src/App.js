@@ -24,7 +24,7 @@ function App() {
         <Route path='/addProducts'element={<AddProduct/>} />
         <Route path='/updateProducts/:id'element={<UpdateProduct/>} />
         <Route path='/updateCatagory/:id'element={<UpdateCatagory/>} />
-        <Route path='/catgoes/:id' element={Cataoryreasear}/>
+       { /*<Route path='/catgoes/:id' element={Cataoryreasear}/>*/}
 	    </Routes>
       <Footer/> 
       </BrowserRouter>

@@ -14,15 +14,15 @@ app.use(express.json());
 //   })
 // });
 app.get("/", (req, res) => {
-   const pageSize = req.query.pageSize || 10; // default page size is 10
-   const page = req.query.page || 1; // default page is 1
-  const offset = (page - 1) * pageSize;
-  const sql = `SELECT products.ProductId, products.ProductName, categories.CategoryId, categories.CategoryName
-  FROM products INNER JOIN categories ON products.CategoryId = categories.CategoryId
-  LIMIT ${pageSize} OFFSET ${offset}`;
-               con.query(sql, (error, results) => {
-                if (error) throw error;
-                res.send(results);
+  // const pageSize = req.query.pageSize || 10; // default page size is 10
+  // const page = req.query.page || 1; // default page is 1
+  // const offset = (page - 1) * pageSize;
+  const sql = `SELECT Product.ProductId, Product.ProductName, Category.CategoryId, Category.CategoryName
+               FROM Product INNER JOIN Category ON Product.CategoryId = Category.CategoryId
+               `;
+  con.query(sql, (error, results) => {
+    if (error) throw error;
+    res.send(results);
   });
 });
 // catagaries List 
@@ -36,6 +36,7 @@ app.get("/catagories",(req, resp)=>{
 // product update
 app.post("/addproduct", (req, resp) => {
     const data = req.body;
+    console.log(data)
     con.query("INSERT INTO Product SET ?", data, (error, results, fields) => {
       if (error) throw error;
       resp.send(results)
@@ -44,6 +45,7 @@ app.post("/addproduct", (req, resp) => {
   // category add
   app.post("/addcategory", (req, resp) => {
     const data = req.body;
+    console.log(data)
     con.query("INSERT INTO Category SET ?", data, (error, results, fields) => {
       if (error) throw error;
       resp.send(results)
@@ -51,20 +53,14 @@ app.post("/addproduct", (req, resp) => {
   });
   app.get('/product/:id', (req, res) => {
     //console.log(req.params.ProductId)
-    const ProductId = req.params.id;
-    console.log("jj"+ProductId)
-    con.query('SELECT * FROM Product WHERE ProductId = ?', [ProductId], (err, results) => {
-      if (err) {
-        console.error('Error fetching user:', err);
-        res.status(500).json({ error: 'Internal server error' });
-        return;
-      }
-      
-      if (results.length === 0) {
-        res.status(404).json({ error: 'Product not found' });
-      } else {
-        res.json(results[0]);
-      }
+    const id = req.params.id;
+    //console.log("jj"+ProductId)
+    console.log(id)
+    const sql = `SELECT Product.ProductId, Product.ProductName, Category.CategoryId, Category.CategoryName 
+    FROM Product INNER JOIN Category ON Product.CategoryId = Category.CategoryId where ProductId=${id} `;
+    con.query(sql, (error, results) => {
+      if (error) throw error;
+      res.send(results);
     });
   });
   // search catagories
