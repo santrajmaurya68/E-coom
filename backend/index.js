@@ -14,11 +14,11 @@ app.use(express.json());
 //   })
 // });
 app.get("/", (req, res) => {
-  // const pageSize = req.query.pageSize || 10; // default page size is 10
-  // const page = req.query.page || 1; // default page is 1
-  // const offset = (page - 1) * pageSize;
+  const pageSize = req.query.pageSize || 10; // default page size is 10
+  const page = req.query.page || 1; // default page is 1
+  const offset = (page - 1) * pageSize;
   const sql = `SELECT Product.ProductId, Product.ProductName, Category.CategoryId, Category.CategoryName
-               FROM Product INNER JOIN Category ON Product.CategoryId = Category.CategoryId
+               FROM Product INNER JOIN Category ON Product.CategoryId = Category.CategoryId LIMIT ${pageSize} OFFSET ${offset}
                `;
   con.query(sql, (error, results) => {
     if (error) throw error;
@@ -27,7 +27,10 @@ app.get("/", (req, res) => {
 });
 // catagaries List 
 app.get("/catagories",(req, resp)=>{
-   con.query("select * from Category ", (err, result) => {
+  const pageSize = req.query.pageSize || 10; // default page size is 10
+  const page = req.query.page || 1; // default page is 1
+  const offset = (page - 1) * pageSize;
+   con.query(`select * from Category LIMIT ${pageSize} OFFSET ${offset} `, (err, result) => {
     if (err) { resp.send("error in api") }
     else { resp.send(result)
     console.log(result) }
